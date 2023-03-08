@@ -73,12 +73,13 @@ public class LiveBroadcastFragment extends Fragment {
     FFmpegFrameRecorder recorder2;
     long t1, t2;
     String savePath;
-    double frameRate = 7;
+    double frameRate = 5;
     YoloV5Ncnn yoloV5Ncnn = new YoloV5Ncnn();
     Boolean flag = true;
 
     Boolean isRecording = false;
     Thread recordThread;
+    long index1 = 0; long index2 = 0;
 
     public LiveBroadcastFragment() {
         // Required empty public constructor
@@ -165,11 +166,28 @@ public class LiveBroadcastFragment extends Fragment {
 //                                socket = new Socket((host_editText.getText()).toString(),Integer.valueOf(port_editText.getText().toString()));
                                     socket = new Socket(ips[0],8080);
                                     if(socket.isConnected()){
+                                        t1 = getTime1(); t2 = getTime1();
+                                        String mp4FileName = savePath + getTime2() + ".mp4";
+                                        recorder = new FFmpegFrameRecorder(mp4FileName, 640, 480);
+                                        recorder.setFormat("mp4");
+                                        recorder.setFrameRate(frameRate);
+                                        recorder.start();
+//                                        recorder2 = new FFmpegFrameRecorder(mp4FileName, 640, 480);
+//                                        recorder2.setFormat("mp4");
+//                                        recorder2.setFrameRate(frameRate);
+//                                        recorder2.start();
                                         msg.what = 0;//显示连接服务器成功信息
                                         inputStream = socket.getInputStream();
                                         outputStream = socket.getOutputStream();
-                                        recordThread.start();
+//                                        recordThread.start();
                                         Recv();//接收数据
+
+
+//                                        msg.what = 0;//显示连接服务器成功信息
+//                                        inputStream = socket.getInputStream();
+//                                        outputStream = socket.getOutputStream();
+////                                        recordThread.start();
+//                                        Recv();//接收数据
 
                                     }else{
                                         msg.what = 1;//显示连接服务器失败信息
@@ -321,7 +339,8 @@ public class LiveBroadcastFragment extends Fragment {
                         myHandler.sendMessage(msg);
                         break;
                     }
-                    if(!isrecorded){
+                    if(index1 != index2){
+//                    if(!isrecorded){
                         t2 = getTime1();
                         record_frame = converter.convert(record_img);
                         if((t2-t1)<100){
@@ -351,7 +370,8 @@ public class LiveBroadcastFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                        isrecorded = true;
+//                        isrecorded = true;
+                        index2 = index1;
                     }
                 }
             }
@@ -374,6 +394,7 @@ public class LiveBroadcastFragment extends Fragment {
         ArrayList<String> IP_list = new ArrayList<>();
         String local_ip = getMobileIpAddress();
         String[] local_ip_split = local_ip.split("\\.");
+        System.out.println("local_ip: "+local_ip);
         Thread find = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -405,18 +426,7 @@ public class LiveBroadcastFragment extends Fragment {
             }
         });
         find.start();
-        find.join();;
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-
+        find.join();
         return IP_list;
     }
 
@@ -461,12 +471,15 @@ public class LiveBroadcastFragment extends Fragment {
 //                    处理接受到的图像数据 并展示
                     esp_img = BitmapFactory.decodeByteArray(temp, 0,temp.length);
                     if(esp_img!=null){
-                        
+
 //                        CommonUtil.saveBitmap2file(bitmap, getApplicationContext());//存图
                         esp_img = DeteleImg(esp_img, true);
 //                        record_frame = converter.convert(esp_img);
                         record_img = esp_img;
                         imageView_esp.setImageBitmap(esp_img);//这句就能显示图片(bitmap数据没问题的情况下) 存在图像闪烁情况 待解决
+                        index1 = System.currentTimeMillis();
+                        System.out.println("现在的时间是"+index1);
+                        System.out.println("刷新一次耗时："+(index1-index2));
                         isrecorded = false;
                     }
 //                    if(flag){
@@ -505,10 +518,14 @@ public class LiveBroadcastFragment extends Fragment {
                 frame = converter.convert(esp_img);
                 if (end - start < 60000) {
                     try {
-                        if(!isrecorded){
+                        if (index1 != index2) {
                             recorder2.record(frame);
-                            isrecorded = true;
+                            index2 = index1;
                         }
+//                        if(!isrecorded){
+//                            recorder2.record(frame);
+//                            isrecorded = true;
+//                        }
 
                     } catch (FrameRecorder.Exception e) {
                         e.printStackTrace();
@@ -553,20 +570,17 @@ public class LiveBroadcastFragment extends Fragment {
             public Boolean call() {
                 String mp4FileName = savePath + getTime2() + ".mp4";
                 FFmpegFrameRecorder recorder1 = new FFmpegFrameRecorder(mp4FileName, 640, 480);
-
                 try {
                     recorder1.setFormat("mp4");
                     recorder1.setFrameRate(frameRate);
                     recorder1.start();
                     while (isRecording) {
-
                         if(esp_img!=null){
                             Frame myframe = converter.convert(esp_img);
                             recorder1.record(myframe);
                         }
                     }
                     recorder1.stop();
-
                 } catch (FrameRecorder.Exception e) {
                     e.printStackTrace();
                     return false;

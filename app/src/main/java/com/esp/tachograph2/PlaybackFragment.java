@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class PlaybackFragment extends Fragment {
 
@@ -49,15 +52,23 @@ public class PlaybackFragment extends Fragment {
             return;
         }
         tableLayout_videoList.removeAllViews();
-        int width = 200; int height = 300;
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, height);
         File[] videos = folder.listFiles();
+        Arrays.sort(videos, new Comparator<File>() {
+            public int compare(File f1, File f2) {
+                return Long.compare(f2.lastModified(), f1.lastModified());
+            }
+        });
         for(File video : videos){
             String videoPath = video.getPath();
             String videoName = video.getName();
             if(videoName.endsWith(".mp4")){
                 TableRow tableRow = new TableRow(getContext());
                 ImageView imageView = new ImageView(getContext());
+                int width = getResources().getDisplayMetrics().widthPixels * 1 / 3; // 宽度为屏幕宽度的2/3
+                int height = width * 3 / 4; // 高度为宽度的3/4
+                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(width, height);
+//                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+                imageView.setLayoutParams(layoutParams);
 //                imageView.setLayoutParams(params);
                 Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Video.Thumbnails.MINI_KIND);
 //                thumbnail = scaleMatrix(thumbnail, 200, 300);
