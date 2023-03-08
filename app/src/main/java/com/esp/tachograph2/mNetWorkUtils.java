@@ -49,6 +49,9 @@ import java.util.Locale;
 public class mNetWorkUtils {
     static String TAG = "mNetWorkUtils";
     static String savePath = Environment.getExternalStorageDirectory().toString() + "/tachograph/";
+    static String savePath1 = Environment.getExternalStorageDirectory().toString() + "/tachograph/qianduan/";
+    static String savePath2 = Environment.getExternalStorageDirectory().toString() + "/tachograph/houduan/";
+
     //查看本地IP
     private static String getMobileIpAddress() {
         try {
@@ -67,7 +70,8 @@ public class mNetWorkUtils {
         return null;
     }
 
-    static CaptureVideoTask mCaptureVideoTask;
+    static CaptureVideoTask mCaptureVideoTask1;
+    static CaptureVideoTask mCaptureVideoTask2;
     //查看连接热点设备的ip
     public static ArrayList<String> SearchHotIP(){
         ArrayList<String> IP_list = new ArrayList<>();
@@ -186,7 +190,7 @@ public class mNetWorkUtils {
         return result[0];
     }
     //查找并列出esp32cam的IP
-    public static void listESP(TableLayout body, ImageView imageView, Context context, YoloV5Ncnn yoloV5Ncnn){
+    public static void listESP(TableLayout body, ImageView imageView_qianduan, ImageView imageView_houduan, Context context, YoloV5Ncnn yoloV5Ncnn){
         body.removeAllViews();
         ArrayList<String> IP_list = SearchHotIP();
         for(int i = 0; i < IP_list.size(); i++){
@@ -194,39 +198,110 @@ public class mNetWorkUtils {
             String result = IsEsp(ip);
             Log.d(TAG, "result: "+result);
             if (result.contains("this is esp32cam")) {
-                Log.d(TAG,"11");
-                TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                String number, IP;
-                TableRow tableRow = new TableRow(context);
-                TextView textView1 = new TextView(context);
-                textView1.setText("前端");
-                textView1.setTextSize(20);
-                tableRow.addView(textView1);
-                TextView textView2 = new TextView(context);
-                String url = "http://"+ip;
-                textView2.setText(url);
-                textView2.setTextSize(20);
-                tableRow.addView(textView2);
-                Button button = new Button(context);
-                button.setText("连接");
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (button.getText().equals("连接")) {
-                            mCaptureVideoTask = new CaptureVideoTask(imageView, savePath, yoloV5Ncnn);
-                            mCaptureVideoTask.execute(url);
+                if (result.contains("qianduan")) {
+                    Log.d(TAG,"找到前端esp");
+                    TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    String number, IP;
+                    TableRow tableRow = new TableRow(context);
+                    TextView textView1 = new TextView(context);
+                    textView1.setText("前端");
+                    textView1.setTextSize(20);
+                    tableRow.addView(textView1);
+                    TextView textView2 = new TextView(context);
+                    String url = "http://"+ip;
+                    textView2.setText(url);
+                    textView2.setTextSize(20);
+                    tableRow.addView(textView2);
+                    Button button = new Button(context);
+                    button.setText("连接");
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (button.getText().equals("连接")) {
+                                mCaptureVideoTask1 = new CaptureVideoTask(imageView_qianduan, savePath1, yoloV5Ncnn);
+                                mCaptureVideoTask1.execute(url);
 //                            mHttpGetTask.execute(url);
-                            button.setText("停止");
-                        }
-                        else if (button.getText().equals("停止")) {
-                            mCaptureVideoTask.cancel(true);
+                                button.setText("停止");
+                            }
+                            else if (button.getText().equals("停止")) {
+                                mCaptureVideoTask1.cancel(true);
 //                            mHttpGetTask.cancel(true);
-                            button.setText("连接");
+                                button.setText("连接");
+                            }
                         }
-                    }
-                });
-                tableRow.addView(button);
-                body.addView(tableRow);
+                    });
+                    tableRow.addView(button);
+                    body.addView(tableRow);
+                }
+                if (result.contains("houduan")) {
+                    Log.d(TAG,"找到后端esp");
+                    TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    String number, IP;
+                    TableRow tableRow = new TableRow(context);
+                    TextView textView1 = new TextView(context);
+                    textView1.setText("后端");
+                    textView1.setTextSize(20);
+                    tableRow.addView(textView1);
+                    TextView textView2 = new TextView(context);
+                    String url = "http://"+ip;
+                    textView2.setText(url);
+                    textView2.setTextSize(20);
+                    tableRow.addView(textView2);
+                    Button button = new Button(context);
+                    button.setText("连接");
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (button.getText().equals("连接")) {
+                                mCaptureVideoTask2 = new CaptureVideoTask(imageView_houduan, savePath2, yoloV5Ncnn);
+                                mCaptureVideoTask2.execute(url);
+//                            mHttpGetTask.execute(url);
+                                button.setText("停止");
+                            }
+                            else if (button.getText().equals("停止")) {
+                                mCaptureVideoTask2.cancel(true);
+//                            mHttpGetTask.cancel(true);
+                                button.setText("连接");
+                            }
+                        }
+                    });
+                    tableRow.addView(button);
+                    body.addView(tableRow);
+                }
+
+//                Log.d(TAG,"11");
+//                TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                String number, IP;
+//                TableRow tableRow = new TableRow(context);
+//                TextView textView1 = new TextView(context);
+//                textView1.setText("前端");
+//                textView1.setTextSize(20);
+//                tableRow.addView(textView1);
+//                TextView textView2 = new TextView(context);
+//                String url = "http://"+ip;
+//                textView2.setText(url);
+//                textView2.setTextSize(20);
+//                tableRow.addView(textView2);
+//                Button button = new Button(context);
+//                button.setText("连接");
+//                button.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        if (button.getText().equals("连接")) {
+//                            mCaptureVideoTask = new CaptureVideoTask(imageView, savePath, yoloV5Ncnn);
+//                            mCaptureVideoTask.execute(url);
+////                            mHttpGetTask.execute(url);
+//                            button.setText("停止");
+//                        }
+//                        else if (button.getText().equals("停止")) {
+//                            mCaptureVideoTask.cancel(true);
+////                            mHttpGetTask.cancel(true);
+//                            button.setText("连接");
+//                        }
+//                    }
+//                });
+//                tableRow.addView(button);
+//                body.addView(tableRow);
             }
         }
     }

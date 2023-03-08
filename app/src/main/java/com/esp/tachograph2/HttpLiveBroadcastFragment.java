@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class HttpLiveBroadcastFragment extends Fragment {
-    ImageView imageView_now;
+    ImageView imageView_qianduan, imageView_houduan;
     String url = "http://192.168.43.185";
     String TAG = "HttpLiveBroadcastFragment";
 //    TableLayout body;
@@ -39,7 +40,8 @@ public class HttpLiveBroadcastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_http_live_broadcast, container, false);
-        imageView_now = (ImageView) view.findViewById(R.id.imageView_esp2);
+        imageView_qianduan = (ImageView) view.findViewById(R.id.imageView_esp2_qianduan);
+        imageView_houduan = (ImageView) view.findViewById(R.id.imageView_esp2_houduan);
         Button btn_find = (Button) view.findViewById(R.id.button_search_hot_IP2);
         TableLayout body = (TableLayout)view.findViewById(R.id.tablelayout_body2);
         YoloV5Ncnn yoloV5Ncnn = new YoloV5Ncnn();
@@ -50,7 +52,7 @@ public class HttpLiveBroadcastFragment extends Fragment {
         btn_find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mNetWorkUtils.listESP(body, imageView_now, getContext(), yoloV5Ncnn);
+                mNetWorkUtils.listESP(body, imageView_qianduan, imageView_houduan, getContext(), yoloV5Ncnn);
             }
         });
         return view;

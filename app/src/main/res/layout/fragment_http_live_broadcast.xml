@@ -52,10 +52,15 @@
             </LinearLayout>
 
         </ScrollView>
+
         <ImageView
-            android:id="@+id/imageView_esp2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:id="@+id/imageView_esp2_qianduan"
+            android:layout_width="360dp"
+            android:layout_height="240dp" />
+        <ImageView
+            android:id="@+id/imageView_esp2_houduan"
+            android:layout_width="360dp"
+            android:layout_height="240dp"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -8,10 +8,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:weightSum="1"
         android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
+            android:text="前端"
+            />
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="0.45">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -20,10 +28,29 @@
                     android:id="@+id/tablelayout_videoList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
                 </TableLayout>
             </LinearLayout>
-
+        </ScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
+            android:text="后端"
+            />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.45">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TableLayout
+                    android:id="@+id/tablelayout_videoList2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </TableLayout>
+            </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
