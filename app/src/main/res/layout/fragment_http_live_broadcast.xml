@@ -55,12 +55,14 @@
 
         <ImageView
             android:id="@+id/imageView_esp2_qianduan"
-            android:layout_width="360dp"
-            android:layout_height="240dp" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"/>
         <ImageView
             android:id="@+id/imageView_esp2_houduan"
-            android:layout_width="360dp"
-            android:layout_height="240dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"/>
     </LinearLayout>
 
 </FrameLayout>
