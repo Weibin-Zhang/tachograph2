@@ -24,15 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         checkNeedPermissions();
-//        binding = ActivityMainBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot());
-
-        // Example of a call to a native method
-//        TextView tv = findViewById(R.id.sample_text);
-//        tv.setText(stringFromJNI());
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-//        FrameLayout fragement_container = findViewById(R.id.fragment_container);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HttpLiveBroadcastFragment()).commit();
     }
@@ -55,18 +48,16 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment = null;
                     switch (item.getItemId()){
-//                        case 0:
                         case R.id.navigation_live_broadcast:
-                            selectedFragment = new HttpLiveBroadcastFragment();
+                            selectedFragment = HttpLiveBroadcastFragment.newInstance("param1", "param2");
+//                            selectedFragment = new HttpLiveBroadcastFragment();
 //                            selectedFragment = new LiveBroadcastFragment();
                             break;
-//                        case 1:
-                        case R.id.navigation_playback:
-                            selectedFragment = new PlaybackFragment();
+                        case R.id.navigation_localplayback:
+                            selectedFragment = new LocalPlaybackFragment();
                             break;
-//                        case 2:
-                        case R.id.navigation_home:
-                            selectedFragment = new HomeFragment();
+                        case R.id.navigation_remoteplayback:
+                            selectedFragment = new RemotePlaybackFragment();
                             break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

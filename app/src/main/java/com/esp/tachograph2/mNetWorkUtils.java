@@ -207,7 +207,7 @@ public class mNetWorkUtils {
                     textView1.setTextSize(20);
                     tableRow.addView(textView1);
                     TextView textView2 = new TextView(context);
-                    String url = "http://"+ip;
+                    String url = "http://"+ip +"/capture";
                     textView2.setText(url);
                     textView2.setTextSize(20);
                     tableRow.addView(textView2);
@@ -248,7 +248,7 @@ public class mNetWorkUtils {
                     textView1.setTextSize(20);
                     tableRow.addView(textView1);
                     TextView textView2 = new TextView(context);
-                    String url = "http://"+ip;
+                    String url = "http://"+ip+"/capture";
                     textView2.setText(url);
                     textView2.setTextSize(20);
                     tableRow.addView(textView2);
@@ -481,7 +481,6 @@ public class mNetWorkUtils {
             imageView.setImageBitmap(bitmaps[0]);
         }
     }
-
     //根据时间生成视频保存的文件名，如“2010年10月10日10时10分.jpg”
     public static String getMp4SaveName(){
         String name = null;
@@ -627,7 +626,7 @@ public class mNetWorkUtils {
         }
     }
     //调用yolo模型对目标画框
-    private static Bitmap DeteleImg(Bitmap bitmap, Boolean b, YoloV5Ncnn yoloV5Ncnn){
+    public static Bitmap DeteleImg(Bitmap bitmap, Boolean b, YoloV5Ncnn yoloV5Ncnn){
         YoloV5Ncnn.Obj[] objects = yoloV5Ncnn.Detect(bitmap, b);
         if(objects == null){
             return bitmap;

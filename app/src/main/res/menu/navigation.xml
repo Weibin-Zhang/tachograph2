@@ -8,13 +8,13 @@
         />
     <item
         android:orderInCategory="1"
-        android:id="@+id/navigation_playback"
-        android:title="回放"
+        android:id="@+id/navigation_localplayback"
+        android:title="本地回放"
         />
     <item
         android:orderInCategory="2"
-        android:id="@+id/navigation_home"
-        android:title="我的"
+        android:id="@+id/navigation_remoteplayback"
+        android:title="远程回放"
         />
 
 </menu>

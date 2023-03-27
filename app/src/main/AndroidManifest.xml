@@ -36,6 +36,16 @@
             android:theme="@style/FullscreenTheme">
             <!-- 其他属性 -->
         </activity>
+        <activity android:name=".ReadSDActivity2"
+            android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity android:name=".HistoryPlayBackActivity"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

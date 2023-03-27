@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -24,11 +23,11 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class PlaybackFragment extends Fragment {
+public class LocalPlaybackFragment extends Fragment {
 
     TableLayout tableLayout_videoList, tableLayout_videoList2;
 
-    public PlaybackFragment() {
+    public LocalPlaybackFragment() {
         // Required empty public constructor
     }
 
