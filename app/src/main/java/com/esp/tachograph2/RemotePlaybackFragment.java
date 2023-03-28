@@ -45,6 +45,7 @@ public class RemotePlaybackFragment extends Fragment {
     private ArrayAdapter<String> mAdapter;
     private Stack<String> mStack = new Stack<>();
     private Button mBackButton;
+    private Button mSearchButton;
     private LayoutInflater mInflater;
     String BASE_URL = "http://192.168.43.33/";
     @Override
@@ -53,8 +54,13 @@ public class RemotePlaybackFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_remote_playback, container, false);
         mListView = view.findViewById(R.id.listView);
         mBackButton = view.findViewById(R.id.backButton);
-        String wifiIP = getWifiIP();
-//        BASE_URL = "http://" + wifiIP + "/";
+//        mSearchButton = view.findViewById(R.id.searchButton);
+//        mSearchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
         mAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, mPaths){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {

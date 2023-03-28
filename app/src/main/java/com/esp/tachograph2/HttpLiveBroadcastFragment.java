@@ -37,14 +37,14 @@ public class HttpLiveBroadcastFragment extends Fragment {
 //    YoloV5Ncnn yoloV5Ncnn = new YoloV5Ncnn();
 
     public HttpLiveBroadcastFragment() {}
-    public static  HttpLiveBroadcastFragment newInstance(String ip, String localtion){
-        HttpLiveBroadcastFragment fragment = new HttpLiveBroadcastFragment();
-        Bundle args = new Bundle();
-        args.putString("ip", ip);
-        args.putString("location", localtion);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static  HttpLiveBroadcastFragment newInstance(String ip, String localtion){
+//        HttpLiveBroadcastFragment fragment = new HttpLiveBroadcastFragment();
+//        Bundle args = new Bundle();
+//        args.putString("ip", ip);
+//        args.putString("location", localtion);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_http_live_broadcast, container, false);

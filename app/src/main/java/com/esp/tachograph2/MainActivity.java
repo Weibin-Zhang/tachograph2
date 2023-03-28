@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
                     Fragment selectedFragment = null;
                     switch (item.getItemId()){
                         case R.id.navigation_live_broadcast:
-                            selectedFragment = HttpLiveBroadcastFragment.newInstance("param1", "param2");
-//                            selectedFragment = new HttpLiveBroadcastFragment();
+//                            selectedFragment = HttpLiveBroadcastFragment.newInstance("param1", "param2");
+                            selectedFragment = new HttpLiveBroadcastFragment();
 //                            selectedFragment = new LiveBroadcastFragment();
                             break;
                         case R.id.navigation_localplayback:

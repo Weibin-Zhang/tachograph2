@@ -234,6 +234,15 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Bitmap... bitmaps){
             imageView.setImageBitmap(bitmaps[0]);
+            delay(150);
+        }
+        private void delay(int ms){
+            try {
+                Thread.currentThread();
+                Thread.sleep(ms);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
     @Override
