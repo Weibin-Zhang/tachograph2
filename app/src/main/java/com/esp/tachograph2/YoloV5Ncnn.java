@@ -21,6 +21,8 @@ public class YoloV5Ncnn
 {
     public native boolean Init(AssetManager mgr);
 
+    public native boolean Uninit();
+
     public class Obj
     {
         public float x;

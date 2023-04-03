@@ -2,18 +2,16 @@ package com.esp.tachograph2;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.bytedeco.javacpp.presets.opencv_core;
 import org.bytedeco.javacv.AndroidFrameConverter;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
@@ -27,7 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -37,12 +38,14 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
     private ImageView imageView1;
     private String TAG = "HistoryPlayBackActivity";
     static String savePath1 = Environment.getExternalStorageDirectory().toString() + "/tachograph/qianduan/";
-    String BASE_URL = "http://192.168.43.33/";
+    String BASE_URL = "http://192.168.43.2/";
     mNetWorkUtils.ImageQueue imageQueue = new mNetWorkUtils.ImageQueue();
     String path = "";
     DownloadFolder1 downloadFolder1;
     DetectAndRecord detectAndRecord;
     YoloV5Ncnn yoloV5Ncnn;
+    private boolean downloadFlag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,12 +100,27 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
             }
             return jpgList;
         }
+        //被取消时释放资源
+        @Override
+        protected void onCancelled(){
+
+        }
+        //完成时释放资源
+        @Override
+        protected void onPostExecute(List<String> list){
+
+        }
     }
 
     //下载整个文件夹
     private class DownloadFolder1 extends AsyncTask<List<String>, Bitmap, Void>{
         @Override
+        protected void onPreExecute(){
+            downloadFlag = true;
+        }
+        @Override
         protected Void doInBackground(List<String>... lists) {
+            downloadFlag = true;
             List<String> jpgList = lists[0];
             int i = 1;
             while(i<jpgList.size() && !isCancelled()){
@@ -129,6 +147,16 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
                 i++;
             }
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid){
+            super.onPostExecute(aVoid);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    downloadFlag = false;
+                }
+            }, 1000);
         }
     }
 
@@ -163,7 +191,9 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
             }
             path = getIntent().getStringExtra("path");
             Log.d(TAG1, path);
-            mp4Name = path + ".mp4";
+
+            mp4Name = getSaveMp4FilePath(path);
+            Log.d(TAG2,"saveMp4FilePath:"+mp4Name);
 //            mp4Name = "test.mp4";
             saveMp4FilePath = savePath + mp4Name;
             recorder = new FFmpegFrameRecorder(saveMp4FilePath, width, height);
@@ -184,7 +214,7 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
             int length = integers[0];
             int currentNum = 0;
             long time1 = System.currentTimeMillis();
-            while (!isCancelled() && currentNum < length) {
+            while (!isCancelled() && currentNum < length && downloadFlag) {
                 Log.d(TAG1, "inblckground");
                 Bitmap bitmap = imageQueue.getImage();
                 if(bitmap == null){
@@ -244,13 +274,23 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        //将形如"2023_04_02/19_55"的表达式转为"2023年04月02日19时55分"的形式
+        private String getSaveMp4FilePath(String dateTime){
+            String[] parts = dateTime.split("[/_]");
+            String result = parts[0] + "年" + parts[1] + "月" + parts[2] + "日" + parts[3] + "时" + parts[4] + "分.mp4";
+            return result;
+        }
     }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         // 结束当前 Activity
-        downloadFolder1.cancel(true);
-        detectAndRecord.cancel(true);
+        if (downloadFolder1 != null) {
+            downloadFolder1.cancel(true);
+        }
+        if (detectAndRecord != null) {
+            detectAndRecord.cancel(true);
+        }
         finish();
     }
     @Override
@@ -263,6 +303,14 @@ public class HistoryPlayBackActivity extends AppCompatActivity {
         if (detectAndRecord != null) {
             detectAndRecord.cancel(true);
         }
+        downloadFolder1 = null;
+        detectAndRecord = null;
+        while(!imageQueue.isEmpty()){
+            Bitmap bitmap = imageQueue.getImage();
+            bitmap.recycle();
+        }
+        imageView1.setImageDrawable(null);
+        yoloV5Ncnn.Uninit();
         finish();
     }
 }

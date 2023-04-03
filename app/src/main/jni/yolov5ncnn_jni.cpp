@@ -303,6 +303,12 @@ JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved)
 
     ncnn::destroy_gpu_instance();
 }
+//尝试添加一个释放模型资源的函数
+JNIEXPORT jboolean JNICALL Java_com_esp_tachograph2_YoloV5Ncnn_Uninit(JNIEnv* env, jobject thiz)
+{
+    yolov5.clear();
+    return JNI_TRUE;
+}
 
 // public native boolean Init(AssetManager mgr);
 JNIEXPORT jboolean JNICALL Java_com_esp_tachograph2_YoloV5Ncnn_Init(JNIEnv* env, jobject thiz, jobject assetManager)

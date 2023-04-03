@@ -69,8 +69,8 @@ public class mNetWorkUtils {
 
     static CaptureVideoTask mCaptureVideoTask1;
     static CaptureVideoTask mCaptureVideoTask2;
-    static GetImg getImg1, getImg2;
-    static DetectAndRecord detectAndRecord1, detectAndRecord2;
+//    static GetImg getImg1, getImg2;
+//    static DetectAndRecord detectAndRecord1, detectAndRecord2;
     //查看连接热点设备的ip
     public static ArrayList<String> SearchHotIP(){
         ArrayList<String> IP_list = new ArrayList<>();
@@ -188,102 +188,102 @@ public class mNetWorkUtils {
         try {testIP.join();} catch (InterruptedException e) {e.printStackTrace();}
         return result[0];
     }
-    //查找并列出esp32cam的IP
-    public static void listESP(TableLayout body, ImageView imageView_qianduan, ImageView imageView_houduan, Context context, YoloV5Ncnn yoloV5Ncnn){
-        body.removeAllViews();
-        ArrayList<String> IP_list = SearchHotIP();
-        for(int i = 0; i < IP_list.size(); i++){
-            String ip = IP_list.get(i);
-            String result = IsEsp(ip);
-            Log.d(TAG, "result: "+result);
-            if (result.contains("this is esp32cam")) {
-                if (result.contains("qianduan")) {
-                    Log.d(TAG,"找到前端esp");
-                    TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    String number, IP;
-                    TableRow tableRow = new TableRow(context);
-                    TextView textView1 = new TextView(context);
-                    textView1.setText("前端");
-                    textView1.setTextSize(20);
-                    tableRow.addView(textView1);
-                    TextView textView2 = new TextView(context);
-                    String url = "http://"+ip +"/capture";
-                    textView2.setText(url);
-                    textView2.setTextSize(20);
-                    tableRow.addView(textView2);
-                    Button button = new Button(context);
-                    button.setText("连接");
-                    ExecutorService executorService1 = Executors.newFixedThreadPool(2);
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (button.getText().equals("连接")) {
-                                getImg1 = new GetImg();
-                                detectAndRecord1 = new DetectAndRecord(savePath1, imageView_qianduan, yoloV5Ncnn);
-                                getImg1.executeOnExecutor(executorService1, url);
-                                detectAndRecord1.executeOnExecutor(executorService1);
-//                                mCaptureVideoTask1 = new CaptureVideoTask(imageView_qianduan, savePath1, yoloV5Ncnn);
-//                                mCaptureVideoTask1.execute(url);
-                                button.setText("停止");
-                            }
-                            else if (button.getText().equals("停止")) {
-                                getImg1.cancel(true);
-                                detectAndRecord1.cancel(true);
-//                                executorService1.shutdown();
-//                                mCaptureVideoTask1.cancel(true);
-                                button.setText("连接");
-                            }
-                        }
-                    });
-                    tableRow.addView(button);
-                    body.addView(tableRow);
-                }
-                if (result.contains("houduan")) {
-                    Log.d(TAG,"找到后端esp");
-                    TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    String number, IP;
-                    TableRow tableRow = new TableRow(context);
-                    TextView textView1 = new TextView(context);
-                    textView1.setText("后端");
-                    textView1.setTextSize(20);
-                    tableRow.addView(textView1);
-                    TextView textView2 = new TextView(context);
-                    String url = "http://"+ip+"/capture";
-                    textView2.setText(url);
-                    textView2.setTextSize(20);
-                    tableRow.addView(textView2);
-                    Button button = new Button(context);
-                    button.setText("连接");
-                    ExecutorService executorService2 = Executors.newFixedThreadPool(2);
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (button.getText().equals("连接")) {
-                                getImg2 = new GetImg();
-                                detectAndRecord2 = new DetectAndRecord(savePath2, imageView_houduan, yoloV5Ncnn);
-                                getImg2.executeOnExecutor(executorService2, url);
-                                detectAndRecord2.executeOnExecutor(executorService2);
-//                                mCaptureVideoTask2 = new CaptureVideoTask(imageView_houduan, savePath2, yoloV5Ncnn);
-//                                mCaptureVideoTask2.execute(url);
-//                            mHttpGetTask.execute(url);
-                                button.setText("停止");
-                            }
-                            else if (button.getText().equals("停止")) {
-                                getImg2.cancel(true);
-                                detectAndRecord2.cancel(true);
-//                                executorService2.shutdown();
-//                                mCaptureVideoTask2.cancel(true);
-//                            mHttpGetTask.cancel(true);
-                                button.setText("连接");
-                            }
-                        }
-                    });
-                    tableRow.addView(button);
-                    body.addView(tableRow);
-                }
-            }
-        }
-    }
+//    //查找并列出esp32cam的IP
+//    public static void listESP(TableLayout body, ImageView imageView_qianduan, ImageView imageView_houduan, Context context, YoloV5Ncnn yoloV5Ncnn){
+//        body.removeAllViews();
+//        ArrayList<String> IP_list = SearchHotIP();
+//        for(int i = 0; i < IP_list.size(); i++){
+//            String ip = IP_list.get(i);
+//            String result = IsEsp(ip);
+//            Log.d(TAG, "result: "+result);
+//            if (result.contains("this is esp32cam")) {
+//                if (result.contains("qianduan")) {
+//                    Log.d(TAG,"找到前端esp");
+//                    TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                    String number, IP;
+//                    TableRow tableRow = new TableRow(context);
+//                    TextView textView1 = new TextView(context);
+//                    textView1.setText("前端");
+//                    textView1.setTextSize(20);
+//                    tableRow.addView(textView1);
+//                    TextView textView2 = new TextView(context);
+//                    String url = "http://"+ip +"/capture";
+//                    textView2.setText(url);
+//                    textView2.setTextSize(20);
+//                    tableRow.addView(textView2);
+//                    Button button = new Button(context);
+//                    button.setText("连接");
+//                    ExecutorService executorService1 = Executors.newFixedThreadPool(2);
+//                    button.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if (button.getText().equals("连接")) {
+//                                getImg1 = new GetImg();
+//                                detectAndRecord1 = new DetectAndRecord(savePath1, imageView_qianduan, yoloV5Ncnn);
+//                                getImg1.executeOnExecutor(executorService1, url);
+//                                detectAndRecord1.executeOnExecutor(executorService1);
+////                                mCaptureVideoTask1 = new CaptureVideoTask(imageView_qianduan, savePath1, yoloV5Ncnn);
+////                                mCaptureVideoTask1.execute(url);
+//                                button.setText("停止");
+//                            }
+//                            else if (button.getText().equals("停止")) {
+//                                getImg1.cancel(true);
+//                                detectAndRecord1.cancel(true);
+////                                executorService1.shutdown();
+////                                mCaptureVideoTask1.cancel(true);
+//                                button.setText("连接");
+//                            }
+//                        }
+//                    });
+//                    tableRow.addView(button);
+//                    body.addView(tableRow);
+//                }
+//                if (result.contains("houduan")) {
+//                    Log.d(TAG,"找到后端esp");
+//                    TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                    String number, IP;
+//                    TableRow tableRow = new TableRow(context);
+//                    TextView textView1 = new TextView(context);
+//                    textView1.setText("后端");
+//                    textView1.setTextSize(20);
+//                    tableRow.addView(textView1);
+//                    TextView textView2 = new TextView(context);
+//                    String url = "http://"+ip+"/capture";
+//                    textView2.setText(url);
+//                    textView2.setTextSize(20);
+//                    tableRow.addView(textView2);
+//                    Button button = new Button(context);
+//                    button.setText("连接");
+//                    ExecutorService executorService2 = Executors.newFixedThreadPool(2);
+//                    button.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if (button.getText().equals("连接")) {
+//                                getImg2 = new GetImg();
+//                                detectAndRecord2 = new DetectAndRecord(savePath2, imageView_houduan, yoloV5Ncnn);
+//                                getImg2.executeOnExecutor(executorService2, url);
+//                                detectAndRecord2.executeOnExecutor(executorService2);
+////                                mCaptureVideoTask2 = new CaptureVideoTask(imageView_houduan, savePath2, yoloV5Ncnn);
+////                                mCaptureVideoTask2.execute(url);
+////                            mHttpGetTask.execute(url);
+//                                button.setText("停止");
+//                            }
+//                            else if (button.getText().equals("停止")) {
+//                                getImg2.cancel(true);
+//                                detectAndRecord2.cancel(true);
+////                                executorService2.shutdown();
+////                                mCaptureVideoTask2.cancel(true);
+////                            mHttpGetTask.cancel(true);
+//                                button.setText("连接");
+//                            }
+//                        }
+//                    });
+//                    tableRow.addView(button);
+//                    body.addView(tableRow);
+//                }
+//            }
+//        }
+//    }
     //不断重启的异步任务，用于循环读取esp32cam的画面
     public static class HttpGetTask extends AsyncTask<String, Void, Bitmap> {
         String url = null;
@@ -329,6 +329,12 @@ public class mNetWorkUtils {
             }
             return null;
         }
+        public void clear(){
+            while (!imageQueue.isEmpty()) {
+                Bitmap bitmap = imageQueue.poll();
+                bitmap.recycle();
+            }
+        }
         public Boolean isEmpty(){
             return imageQueue.isEmpty();
         }
@@ -336,151 +342,151 @@ public class mNetWorkUtils {
     //定义全局变量用于存储图片
     static ImageQueue imageQueue = new ImageQueue();
     static ImageQueue imageQueue2 = new ImageQueue();
-    //异步任务，循环获取esp的图片,将图片传递给检测和录制的异步任务
-    public static class GetImg extends AsyncTask<String, Void, Void>{
-        String url = null;
-//        private DetectAndRecord mDetectAndRecord;
-//        public void setDetectAndRecord(DetectAndRecord detectAndRecord){
-//            mDetectAndRecord = detectAndRecord;
+//    //异步任务，循环获取esp的图片,将图片传递给检测和录制的异步任务
+//    public static class GetImg extends AsyncTask<String, Void, Void>{
+//        String url = null;
+////        private DetectAndRecord mDetectAndRecord;
+////        public void setDetectAndRecord(DetectAndRecord detectAndRecord){
+////            mDetectAndRecord = detectAndRecord;
+////        }
+//        @Override
+//        protected Void doInBackground(String... urls) {
+//            url = urls[0];
+//            while(!isCancelled()){
+//                try{
+//                    URLConnection connection = new URL(url).openConnection();
+//                    connection.connect();
+//                    InputStream input = connection.getInputStream();
+//                    Bitmap bitmap = BitmapFactory.decodeStream(input);
+//                    if (bitmap != null) {
+//                        System.out.println("http connect success");
+//                        imageQueue.addImage(bitmap);
+//                        System.out.println("imagequeue isempty:"+imageQueue.isEmpty());
+////                        mDetectAndRecord.setBitmap(bitmap);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            return null;
 //        }
-        @Override
-        protected Void doInBackground(String... urls) {
-            url = urls[0];
-            while(!isCancelled()){
-                try{
-                    URLConnection connection = new URL(url).openConnection();
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    Bitmap bitmap = BitmapFactory.decodeStream(input);
-                    if (bitmap != null) {
-                        System.out.println("http connect success");
-                        imageQueue.addImage(bitmap);
-                        System.out.println("imagequeue isempty:"+imageQueue.isEmpty());
-//                        mDetectAndRecord.setBitmap(bitmap);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-    }
+//    }
     //异步任务，接收图片，检测图片并录制视频
-    public static class DetectAndRecord extends AsyncTask<Void, Bitmap, Void> {
-        YoloV5Ncnn yoloV5Ncnn;
-        ImageView imageView;
-        //录屏
-        private String savePath;
-        private long start, end;
-        private Boolean isEncorded = false;
-        private int width = 640;
-        private int height = 480;
-        private double frameRate = 5;
-        private FFmpegFrameRecorder recorder;
-        private String mp4Name = null;
-        private String saveMp4FilePath = null;
-        private Frame frame = null;
-        private AndroidFrameConverter converter = new AndroidFrameConverter();
-        private String TAG1 = "Detect:";
-        private String TAG2 = "Record:";
-        public DetectAndRecord(String savePath, ImageView imageView, YoloV5Ncnn yoloV5Ncnn){
-            this.imageView = imageView;
-            this.yoloV5Ncnn = yoloV5Ncnn;
-            this.savePath = savePath;
-            this.start = System.currentTimeMillis();
-            this.end = System.currentTimeMillis();
-        }
-        //在异步任务执行之前调用
-        @Override
-        protected void onPreExecute(){
-            this.start = System.currentTimeMillis();
-            this.end = System.currentTimeMillis();
-            File saveFile = new File(savePath);
-            if (!saveFile.exists()) {
-                saveFile.mkdir();
-            }
-            mp4Name = getMp4SaveName();
-            saveMp4FilePath = savePath + mp4Name;
-            recorder = new FFmpegFrameRecorder(saveMp4FilePath, width, height);
-            recorder.setFormat("mp4");
-            recorder.setFrameRate(frameRate);
-            try{
-                recorder.start();
-            } catch (FrameRecorder.Exception e) {
-                e.printStackTrace();
-            }
-        }
-        //后台执行
-        @Override
-        protected Void doInBackground(Void... voids) {
-            while (!isCancelled()) {
-                Bitmap bitmap = imageQueue.getImage();
-                if(bitmap == null){
-                    Log.w(TAG1,"no image now");
-                    continue;
-                }
-                bitmap = DeteleImg(bitmap, true, yoloV5Ncnn);
-                isEncorded = false;
-                Log.d(TAG1, "finsh");
-                //显示结果
-                publishProgress(bitmap);
-                end = System.currentTimeMillis();
-                frame = converter.convert(bitmap);
-                if((end - start) < 2 * 60000){
-                    //没超过2分钟，继续记录
-                    if (!isEncorded) {
-                        try{
-                            recorder.record(frame);
-                            Log.d(TAG2, "ing");
-                            isEncorded = true;
-                        } catch (FrameRecorder.Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }else{
-                    //每隔两分钟保存成一段视频
-                    start = end;
-                    try{
-                        recorder.stop();
-                        Log.d(TAG2, "stop and restart");
-                    } catch (FrameRecorder.Exception e) {
-                        e.printStackTrace();
-                    }
-                    mp4Name = getMp4SaveName();
-                    saveMp4FilePath = savePath + mp4Name;
-                    recorder = new FFmpegFrameRecorder(saveMp4FilePath, width, height);
-                    recorder.setFormat("mp4");
-                    recorder.setFrameRate(frameRate);
-                    try{
-                        recorder.start();
-                        if(!isEncorded){
-                            recorder.record(frame);
-                            isEncorded = true;
-                        }
-                    } catch (FrameRecorder.Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return null;
-        }
-        //异步任务被取消时调用，此时doInBackground()方法被中断
-        @Override
-        protected void onCancelled(){
-            if(recorder!=null){
-                try {
-                    recorder.stop();
-                } catch (FrameRecorder.Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        //在调用'publishProgress()'方法后被调用，可以更新UI
-        @Override
-        protected void onProgressUpdate(Bitmap... bitmaps){
-            imageView.setImageBitmap(bitmaps[0]);
-        }
-    }
+//    public static class DetectAndRecord extends AsyncTask<Void, Bitmap, Void> {
+//        YoloV5Ncnn yoloV5Ncnn;
+//        ImageView imageView;
+//        //录屏
+//        private String savePath;
+//        private long start, end;
+//        private Boolean isEncorded = false;
+//        private int width = 640;
+//        private int height = 480;
+//        private double frameRate = 5;
+//        private FFmpegFrameRecorder recorder;
+//        private String mp4Name = null;
+//        private String saveMp4FilePath = null;
+//        private Frame frame = null;
+//        private AndroidFrameConverter converter = new AndroidFrameConverter();
+//        private String TAG1 = "Detect:";
+//        private String TAG2 = "Record:";
+//        public DetectAndRecord(String savePath, ImageView imageView, YoloV5Ncnn yoloV5Ncnn){
+//            this.imageView = imageView;
+//            this.yoloV5Ncnn = yoloV5Ncnn;
+//            this.savePath = savePath;
+//            this.start = System.currentTimeMillis();
+//            this.end = System.currentTimeMillis();
+//        }
+//        //在异步任务执行之前调用
+//        @Override
+//        protected void onPreExecute(){
+//            this.start = System.currentTimeMillis();
+//            this.end = System.currentTimeMillis();
+//            File saveFile = new File(savePath);
+//            if (!saveFile.exists()) {
+//                saveFile.mkdir();
+//            }
+//            mp4Name = getMp4SaveName();
+//            saveMp4FilePath = savePath + mp4Name;
+//            recorder = new FFmpegFrameRecorder(saveMp4FilePath, width, height);
+//            recorder.setFormat("mp4");
+//            recorder.setFrameRate(frameRate);
+//            try{
+//                recorder.start();
+//            } catch (FrameRecorder.Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        //后台执行
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            while (!isCancelled()) {
+//                Bitmap bitmap = imageQueue.getImage();
+//                if(bitmap == null){
+//                    Log.w(TAG1,"no image now");
+//                    continue;
+//                }
+//                bitmap = DeteleImg(bitmap, true, yoloV5Ncnn);
+//                isEncorded = false;
+//                Log.d(TAG1, "finsh");
+//                //显示结果
+//                publishProgress(bitmap);
+//                end = System.currentTimeMillis();
+//                frame = converter.convert(bitmap);
+//                if((end - start) < 2 * 60000){
+//                    //没超过2分钟，继续记录
+//                    if (!isEncorded) {
+//                        try{
+//                            recorder.record(frame);
+//                            Log.d(TAG2, "ing");
+//                            isEncorded = true;
+//                        } catch (FrameRecorder.Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }else{
+//                    //每隔两分钟保存成一段视频
+//                    start = end;
+//                    try{
+//                        recorder.stop();
+//                        Log.d(TAG2, "stop and restart");
+//                    } catch (FrameRecorder.Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    mp4Name = getMp4SaveName();
+//                    saveMp4FilePath = savePath + mp4Name;
+//                    recorder = new FFmpegFrameRecorder(saveMp4FilePath, width, height);
+//                    recorder.setFormat("mp4");
+//                    recorder.setFrameRate(frameRate);
+//                    try{
+//                        recorder.start();
+//                        if(!isEncorded){
+//                            recorder.record(frame);
+//                            isEncorded = true;
+//                        }
+//                    } catch (FrameRecorder.Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            return null;
+//        }
+//        //异步任务被取消时调用，此时doInBackground()方法被中断
+//        @Override
+//        protected void onCancelled(){
+//            if(recorder!=null){
+//                try {
+//                    recorder.stop();
+//                } catch (FrameRecorder.Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        //在调用'publishProgress()'方法后被调用，可以更新UI
+//        @Override
+//        protected void onProgressUpdate(Bitmap... bitmaps){
+//            imageView.setImageBitmap(bitmaps[0]);
+//        }
+//    }
     //根据时间生成视频保存的文件名，如“2010年10月10日10时10分.jpg”
     public static String getMp4SaveName(){
         String name = null;

@@ -1,6 +1,8 @@
 package com.esp.tachograph2;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -54,13 +57,52 @@ public class RemotePlaybackFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_remote_playback, container, false);
         mListView = view.findViewById(R.id.listView);
         mBackButton = view.findViewById(R.id.backButton);
-//        mSearchButton = view.findViewById(R.id.searchButton);
-//        mSearchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
+        mSearchButton = view.findViewById(R.id.searchButton);
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //查找esp32cam的ip地址
+                ArrayList<String> IP_list = mNetWorkUtils.SearchHotIP();
+                ArrayList<String> list = new ArrayList<>();
+                for(int i = 0; i < IP_list.size(); i++){
+                    String ip = IP_list.get(i);
+                    String result = mNetWorkUtils.IsEsp(ip);
+                    if (result.contains("this is esp32cam, qianduan")) {
+                        String object = "前端：" + ip;
+                        list.add(object);
+                    } else if (result.contains("this is esp32cam, houduan")) {
+                        String object = "后端：" + ip;
+                        list.add(object);
+                    }
+                }
+                if(list.size()==0){
+                    Toast.makeText(getContext(), "未找到行车记录仪，请检查网络", Toast.LENGTH_SHORT).show();
+                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("请选择一个行车记录仪");
+                    String[] optionsArray = list.toArray(new String[0]);
+                    builder.setItems(optionsArray, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // 处理用户的选择
+                            String selectedOption = list.get(i);
+                            Toast.makeText(getContext(), "你选择了 " + selectedOption, Toast.LENGTH_SHORT).show();
+//                            BASE_URL = selectedOption.split(" ")[1];
+                            String ip = selectedOption.split("：")[1];
+                            BASE_URL = "http://" + ip + "/";
+                            new GetAndShowFolderList().execute("");
+//                            System.out.println("selectedOption:"+selectedOption);
+//                            System.out.println("BASE_URL:"+BASE_URL);
+                        }
+                    });
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+
+
+            }
+        });
         mAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, mPaths){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -107,6 +149,7 @@ public class RemotePlaybackFragment extends Fragment {
                         Intent intent = new Intent(getContext(), HistoryPlayBackActivity.class);
                         intent.putExtra("path", finalDir);
                         intent.putExtra("BASE_URL", BASE_URL);
+
                         startActivity(intent);
                     }
                 });
@@ -125,11 +168,19 @@ public class RemotePlaybackFragment extends Fragment {
                 }
             }
         });
-        new GetAndShowFolderList().execute("");
+
 
 
         return view;
     }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+
+    }
+
+
     //获取并更新目录列表
     private class GetAndShowFolderList extends AsyncTask<String, Void, List<String>> {
         @Override
@@ -150,79 +201,22 @@ public class RemotePlaybackFragment extends Fragment {
             }else{
 
             }
+            System.out.println("PATH:"+paths);
             return paths;
         }
 
         @Override
         protected void onPostExecute(List<String> result) {
-            if(result!=null){
+            System.out.println("RESULT:"+result);
+            if(result.size()!=0){
                 mPaths.clear();
                 mPaths.addAll(result);
                 mAdapter.notifyDataSetChanged();
             } else{
-
+                Toast.makeText(getContext(), "行车过程中请不要访问行车记录仪的内存卡", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private String getWifiIP(){
-        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(getContext().CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                // 设备当前连接到WiFi网络
-                WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                int ipInt = wifiInfo.getIpAddress();
-                String wifiIP = String.format("%d.%d.%d.%d", (ipInt & 0xff), (ipInt >> 8 & 0xff), (ipInt >> 16 & 0xff), (ipInt >> 24 & 0xff));
-                Log.d("TAG", "WiFi IP: " + wifiIP);
-                return wifiIP;
-//                try {
-//                    Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-//                    while (interfaces.hasMoreElements()) {
-//                        NetworkInterface networkInterface = interfaces.nextElement();
-//                        Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-//                        while (addresses.hasMoreElements()) {
-//                            InetAddress address = addresses.nextElement();
-//                            if (!address.isLoopbackAddress() && address instanceof Inet4Address) {
-//                                // 找到设备的IPv4地址
-//                                String localIP = address.getHostAddress();
-//                                Log.d("TAG", "Local IP: " + localIP);
-//                                break;
-//                            }
-//                        }
-//                    }
-//                } catch (SocketException e) {
-//                    e.printStackTrace();
-//                }
-            }
-//            else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-//                // 设备当前连接到移动网络
-//                try {
-//                    Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-//                    while (interfaces.hasMoreElements()) {
-//                        NetworkInterface networkInterface = interfaces.nextElement();
-//                        Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-//                        while (addresses.hasMoreElements()) {
-//                            InetAddress address = addresses.nextElement();
-//                            if (!address.isLoopbackAddress() && address instanceof Inet4Address) {
-//                                // 找到设备的IPv4地址
-//                                String localIP = address.getHostAddress();
-//                                Log.d("TAG", "Local IP: " + localIP);
-//                                break;
-//                            }
-//                        }
-//                    }
-//                } catch (SocketException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-        }
-//        else {
-//            // 设备未连接到网络
-//
-//        }
-        return null;
-    }
 
 }

@@ -25,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <TableLayout
-                    android:id="@+id/tablelayout_videoList"
+                    android:id="@+id/tablelayoutVideoList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 </TableLayout>
@@ -46,7 +46,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <TableLayout
-                    android:id="@+id/tablelayout_videoList2"
+                    android:id="@+id/tablelayoutVideoList2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 </TableLayout>
